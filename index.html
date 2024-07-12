@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #000428, #004e92);
+        color: #fff;
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+
+      .card {
+        width: 90%;
+        max-width: 470px;
+        background: linear-gradient(135deg, #00feba, #5b548a);
+        border-radius: 20px;
+        text-align: center;
+        padding: 40px 35px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        transform: scale(1);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      .search {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .search input {
+        border: 0;
+        outline: 0;
+        color: #555;
+        background: #ebfffc;
+        height: 60px;
+        padding: 10px 25px;
+        margin-right: 16px;
+        font-size: 18px;
+        border-radius: 30px;
+        flex: 1;
+        transition: background-color 0.3s ease;
+      }
+
+      .search input:focus {
+        background-color: #d4f7f3;
+      }
+
+      .search button {
+        width: 60px;
+        height: 60px;
+        outline: 0;
+        border: 0;
+        cursor: pointer;
+        background: #ebfffc;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      .search button:hover {
+        background-color: #d4f7f3;
+        transform: translateY(-3px);
+      }
+
+      .search button img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .weather {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .weather img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+      }
+
+      .weather img:hover {
+        transform: rotate(20deg) scale(1.1);
+      }
+
+      .weather h2.temp {
+        font-size: 60px;
+        font-weight: 700;
+        margin: 10px 0;
+        color: #fff;
+      }
+
+      .weather h2.city {
+        font-size: 36px;
+        font-weight: 400;
+        margin: 0;
+        color: #fff;
+      }
+
+      .details {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 30px;
+        padding: 0 20px;
+      }
+
+      .col {
+        display: flex;
+        align-items: center;
+        text-align: left;
+      }
+
+      .col img {
+        width: 28px;
+        margin-right: 10px;
+      }
+
+      .humidity, .wind {
+        font-size: 22px;
+      }
+
+      .temp, .city {
+        font-size: 24px;
+      }
+
+      @media screen and (max-width: 600px) {
+        .card {
+          padding: 20px 15px;
+        }
+
+        .search input {
+          height: 50px;
+          padding: 8px 15px;
+          font-size: 16px;
+        }
+
+        .search button {
+          width: 50px;
+          height: 50px;
+        }
+
+        .weather img {
+          width: 80px;
+          height: 80px;
+        }
+
+        .weather h2.temp {
+          font-size: 40px;
+        }
+
+        .weather h2.city {
+          font-size: 24px;
+        }
+
+        .humidity, .wind {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="search">
+        <input type="text" placeholder="Enter city name..." id="inputField" />
+        <button class="btn"><img src="search.png" alt="searchlogo" /></button>
+      </div>
+
+      <div class="weather">
+        <img src="rain.png" alt="" class="img" />
+        <h2 class="temp">22°C</h2>
+        <h2 class="city">New York</h2>
+      </div>
+
+      <div class="details">
+        <div class="col">
+          <div>
+            <img src="humidity.png" alt="" />
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+          </div>
+        </div>
+
+        <div class="col">
+          <div>
+            <img src="wind.png" alt="" />
+            <p class="wind">15 km/h</p>
+            <p>Wind Speed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let input = document.querySelector("#inputField");
+      let btn = document.querySelector(".btn");
+      let city = document.querySelector(".city");
+      let temp = document.querySelector(".temp");
+      let humidity = document.querySelector(".humidity");
+      let wind = document.querySelector(".wind");
+      let img = document.querySelector(".img");
+
+      let key = "0b8a3d780bca42deaca130146241207";
+      btn.addEventListener("click", () => {
+        city.innerText = input.value;
+        fetch(
+          `http://api.weatherapi.com/v1/current.json?key=${key}&q=${input.value}&aqi=yes`
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data, "Shyam");
+            temp.innerText = `${data.current.temp_c}°C`;
+            humidity.innerText = `${data.current.humidity}%`;
+            wind.innerText = `${data.current.wind_mph} m/h`;
+            console.log(data.current.humidity);
+
+            if (data.current.temp_c > 32) {
+              img.src = "clear.png";
+            } else if (data.current.temp_c > 30 && data.current.temp_c < 32) {
+              img.src = "mist.png";
+            } else if (data.current.temp_c > 24 && data.current.temp_c < 30) {
+              img.src = "clouds.png";
+            } else if (data.current.temp_c > 21 && data.current.temp_c < 24) {
+              img.src = "drizzle.png";
+            } else if (data.current.temp_c > 14 && data.current.temp_c < 21) {
+              img.src = "rain.png";
+            } else {
+              img.src = "snow.png";
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
